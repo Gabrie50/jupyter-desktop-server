@@ -133,29 +133,16 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
-# Base com Python e NautilusTrader
-FROM python:3.11-slim
 
-# Instalar dependências do sistema
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        git curl wget gnupg unzip build-essential && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Instalando PufferPanel (já está na parte anterior que você colou)
+RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
+RUN apt-get update && apt-get install -y pufferpanel
 
-# Instalar dependências do NautilusTrader
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir maturin numpy pandas pyarrow polars prometheus_client
+# Cria usuário admin automático (opcional: pode fazer na primeira execução via web)
+RUN pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
 
-# Clonar e instalar o NautilusTrader
-RUN git clone https://github.com/nautilustrader/nautilus-trader.git /opt/nautilus-trader && \
-    pip install --no-cache-dir -e /opt/nautilus-trader
-
-# Variáveis de ambiente
-ENV NAUTILUS_HOME=/opt/nautilus-trader
-ENV PYTHONPATH="${PYTHONPATH}:/opt/nautilus-trader"
-
-# Diretório de trabalho
-WORKDIR /app
+# Expor porta do painel
+EXPOSE 8080
 
 
 
