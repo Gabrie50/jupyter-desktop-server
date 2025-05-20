@@ -133,18 +133,19 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
+USER root
 
-# Instalando PufferPanel (manual para Ubuntu 24.04)
-RUN curl -L -o /tmp/pufferpanel.deb https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel.deb \
- && apt-get update && apt-get install -y /tmp/pufferpanel.deb \
- && rm /tmp/pufferpanel.deb
+RUN mkdir -p /var/lib/apt/lists/partial && \
+    curl -L -o /tmp/pufferpanel.deb https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel.deb && \
+    apt-get update && apt-get install -y /tmp/pufferpanel.deb && \
+    rm /tmp/pufferpanel.deb
 
-# Cria usuário admin automático (opcional: pode fazer na primeira execução via web)
+# (Opcional) Criar usuário admin automático
 RUN pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
 
-# Expor porta do painel
+# Expor a porta da interface web
 EXPOSE 8080
 
-
-
+# Volta para o usuário Jupyter padrão
+USER $NB_USER
 
