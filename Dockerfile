@@ -134,9 +134,10 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
-# Instalando PufferPanel (já está na parte anterior que você colou)
-RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
-RUN apt-get update && apt-get install -y pufferpanel
+# Instalando PufferPanel (manual para Ubuntu 24.04)
+RUN curl -L -o /tmp/pufferpanel.deb https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel.deb \
+ && apt-get update && apt-get install -y /tmp/pufferpanel.deb \
+ && rm /tmp/pufferpanel.deb
 
 # Cria usuário admin automático (opcional: pode fazer na primeira execução via web)
 RUN pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
