@@ -130,4 +130,31 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
     echo "c.content.dns_prefetch = False" >> /home/jovyan/.config/qutebrowser/config.py && \
     echo "c.content.canvas_reading = False" >> /home/jovyan/.config/qutebrowser/config.py && \
     echo "c.content.reporting = False" >> /home/jovyan/.config/qutebrowser/config.py
-    
+
+
+# Base com Python e NautilusTrader
+FROM python:3.11-slim
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y git curl wget gnupg unzip build-essential
+
+# Instalar dependências do NautilusTrader
+RUN pip install --upgrade pip && \
+    pip install maturin && \
+    pip install numpy pandas pyarrow polars
+
+# Clonar e instalar o NautilusTrader
+RUN git clone https://github.com/nautilustrader/nautilus-trader.git /opt/nautilus-trader && \
+    pip install -e /opt/nautilus-trader
+
+# Exporters Prometheus para monitoramento
+RUN pip install prometheus_client
+
+# Variáveis de ambiente
+ENV NAUTILUS_HOME=/opt/nautilus-trader
+ENV PYTHONPATH="${PYTHONPATH}:/opt/nautilus-trader"
+
+# Copia seus scripts de trading/monitoramento
+COPY ./scripts /app/scripts
+WORKDIR /app
+
