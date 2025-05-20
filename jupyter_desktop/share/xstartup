@@ -1,5 +1,19 @@
-#!/bin/sh
-export DISPLAY=:1
-cd "$HOME"
-exec /usr/bin/dbus-launch startxfce4
+#!/bin/bash
 
+# Garantir que o DISPLAY esteja definido
+export DISPLAY=:1
+
+# Iniciar VNC (TurboVNC)
+vncserver :1
+
+# Iniciar o noVNC com websockify
+websockify --web=/usr/share/novnc/ 6080 localhost:5901 &
+
+# Iniciar o PufferPanel diretamente (sem systemd)
+pufferpanel run &
+
+# Espera pequena para garantir que tudo está iniciado
+sleep 2
+
+# Iniciar Jupyter Notebook sem token
+start-notebook.sh --NotebookApp.token=''
