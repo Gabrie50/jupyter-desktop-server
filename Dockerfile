@@ -132,20 +132,27 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
     echo "c.content.reporting = False" >> /home/jovyan/.config/qutebrowser/config.py
 
 
-
 USER root
 
-RUN mkdir -p /var/lib/apt/lists/partial && \
-    curl -L -o /tmp/pufferpanel.deb https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel.deb && \
-    apt-get update && apt-get install -y /tmp/pufferpanel.deb && \
-    rm /tmp/pufferpanel.deb
+# Instala dependências necessárias
+RUN apt-get update && apt-get install -y curl unzip systemd-sysv
 
-# (Opcional) Criar usuário admin automático
-RUN pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
+# Instala PufferPanel manualmente
+RUN curl -L https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel-linux-amd64.zip -o /tmp/pufferpanel.zip && \
+    unzip /tmp/pufferpanel.zip -d /usr/local/bin && \
+    chmod +x /usr/local/bin/pufferpanel && \
+    rm /tmp/pufferpanel.zip
 
-# Expor a porta da interface web
+# Inicializa a configuração padrão (isso gera /etc/pufferpanel)
+RUN /usr/local/bin/pufferpanel config --save
+
+# Cria usuário admin (opcional)
+RUN /usr/local/bin/pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
+
+# Expor porta do painel
 EXPOSE 8080
 
-# Volta para o usuário Jupyter padrão
+# Volta para usuário padrão do Jupyter
 USER $NB_USER
+
 
