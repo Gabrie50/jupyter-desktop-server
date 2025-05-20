@@ -157,9 +157,6 @@ ENV PYTHONPATH="${PYTHONPATH}:/opt/nautilus-trader"
 # Diretório de trabalho
 WORKDIR /app
 
-# Copia scripts de trading/monitoramento se existirem
-# Para evitar erro caso a pasta ./scripts não exista
-COPY ./scripts /app/scripts
 
 
 
