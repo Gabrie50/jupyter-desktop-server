@@ -43,7 +43,7 @@ def setup_desktop():
         'command': [
             'websockify', '-v',
             '--web', os.path.join(HERE, 'share/web/noVNC-1.6.0'),
-            '--heartbeat', '10',  # heartbeat ajustado para 10 segundos
+            '--heartbeat', '10',
             '5901',
         ] + socket_args + [
             '--',
@@ -51,14 +51,27 @@ def setup_desktop():
             f'cd {os.getcwd()} && {vnc_command}'
         ],
         'port': 5901,
-        'timeout': 300,  # timeout aumentado para 300 segundos
+        'timeout': 300,
         'mappath': {'/': '/vnc.html'},
-        'new_browser_window': True  # abre automaticamente em uma nova janela
+        'new_browser_window': True
     }
 
-# Teste de execução
+def setup_pufferpanel():
+    return {
+        'command': ['/usr/bin/pufferpanel', 'serve'],  # ajuste conforme o caminho real
+        'timeout': 60,
+        'port': 8080,
+        'new_browser_window': True,
+        'launcher_entry': {
+            'title': 'PufferPanel',
+            'icon_path': os.path.join(HERE, 'icons', 'pufferpanel.svg'),  # opcional
+        }
+    }
+
+# Teste local
 if __name__ == "__main__":
-    config = setup_desktop()
-    print("Configuração gerada com sucesso!")
-    print(config)
-    
+    print("Configuração Desktop:")
+    print(setup_desktop())
+    print("Configuração PufferPanel:")
+    print(setup_pufferpanel())
+        
