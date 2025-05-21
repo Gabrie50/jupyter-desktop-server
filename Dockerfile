@@ -41,8 +41,8 @@ RUN mkdir -p /etc/pufferpanel && \
     echo '{}' > /etc/pufferpanel/config.json && \
     pufferpanel user add --email admin@admin.com --password admin --admin
 
-# Copia o script de startup
-COPY startup /usr/local/bin/startup
+# Copia o script de startup do caminho correto
+COPY jupyter_desktop/share/xstartup /usr/local/bin/startup
 RUN chmod +x /usr/local/bin/startup
 
 # Expõe a porta do painel
@@ -51,7 +51,6 @@ EXPOSE 8080
 # Comando padrão ao iniciar o container
 CMD ["/usr/local/bin/startup"]
 
-    
     
 
 RUN apt-get -y -qq update && apt-get -y -qq install \
