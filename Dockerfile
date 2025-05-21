@@ -3,6 +3,33 @@ FROM quay.io/jupyter/base-notebook:2025-04-01
 
 USER root
 
+# Atualiza o sistema e instala dependências básicas
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y software-properties-common
+sudo add-apt-repository universe
+
+# Instala dependências do PufferPanel
+sudo apt install -y openssl curl nginx mysql-client mysql-server php-fpm php-cli php-curl php-mysql
+
+# Protege a instalação do MySQL (defina a senha root durante o processo)
+sudo mysql_secure_installation
+
+# Adiciona o repositório oficial do PufferPanel
+curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | sudo bash
+
+# Instala o PufferPanel atualizado via APT
+sudo apt install -y pufferpanel
+
+# Inicia e habilita o serviço
+sudo systemctl enable --now pufferpanel
+
+# Cria o usuário administrador para o painel
+sudo pufferpanel user add
+
+# Mostra instrução de acesso
+echo "Instalação concluída. Acesse o painel em: http://localhost:8080"
+
+
 RUN apt-get update && apt-get install -y \
     qutebrowser \
     libnss3 \
@@ -130,29 +157,5 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
     echo "c.content.dns_prefetch = False" >> /home/jovyan/.config/qutebrowser/config.py && \
     echo "c.content.canvas_reading = False" >> /home/jovyan/.config/qutebrowser/config.py && \
     echo "c.content.reporting = False" >> /home/jovyan/.config/qutebrowser/config.py
-
-
-USER root
-
-# Instala dependências necessárias
-RUN apt-get update && apt-get install -y curl unzip systemd-sysv
-
-# Instala PufferPanel manualmente
-RUN curl -L https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel-linux-amd64.zip -o /tmp/pufferpanel.zip && \
-    unzip /tmp/pufferpanel.zip -d /usr/local/bin && \
-    chmod +x /usr/local/bin/pufferpanel && \
-    rm /tmp/pufferpanel.zip
-
-# Inicializa a configuração padrão (isso gera /etc/pufferpanel)
-RUN /usr/local/bin/pufferpanel config --save
-
-# Cria usuário admin (opcional)
-RUN /usr/local/bin/pufferpanel user add --email admin@admin.com --password admin123 --admin true || true
-
-# Expor porta do painel
-EXPOSE 8080
-
-# Volta para usuário padrão do Jupyter
-USER $NB_USER
 
 
