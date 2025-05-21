@@ -42,14 +42,14 @@ RUN mkdir -p /etc/pufferpanel && \
     pufferpanel user add --email admin@admin.com --password admin --admin
 
 # Copia o script de startup
-COPY startup.sh /usr/local/bin/startup.sh
-RUN chmod +x /usr/local/bin/startup.sh
+COPY startup.sh /usr/local/bin/startup
+RUN chmod +x /usr/local/bin/startup
 
 # Expõe a porta do painel
 EXPOSE 8080
 
 # Comando padrão ao iniciar o container
-CMD ["/usr/local/bin/startup.sh"]
+CMD ["/usr/local/bin/startup"]
 
     
     
