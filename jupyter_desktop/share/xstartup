@@ -1,4 +1,9 @@
 #!/bin/sh
 export DISPLAY=:1
 cd "$HOME"
+
+# Inicia o PufferPanel em segundo plano
+nohup pufferpanel run &
+
+# Inicia o ambiente gráfico XFCE
 exec dbus-launch startxfce4
