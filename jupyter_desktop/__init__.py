@@ -59,8 +59,8 @@ def setup_desktop():
 def setup_pufferpanel():
     return {
         'command': ['/usr/bin/pufferpanel', 'serve'],
-        'timeout': 60,
-        'port': 8080,
+        'timeout': 300,
+        'port': 5901,
         'new_browser_window': True,
         'launcher_entry': {
             'title': 'PufferPanel',
