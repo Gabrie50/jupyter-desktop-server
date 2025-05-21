@@ -42,7 +42,7 @@ RUN mkdir -p /etc/pufferpanel && \
     pufferpanel user add --email admin@admin.com --password admin --admin
 
 # Copia o script de startup
-COPY startup.sh /usr/local/bin/startup
+COPY startup /usr/local/bin/startup
 RUN chmod +x /usr/local/bin/startup
 
 # Expõe a porta do painel
