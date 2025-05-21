@@ -3,42 +3,50 @@ FROM quay.io/jupyter/base-notebook:2025-04-01
 
 USER root
 
-# Atualiza o sistema e instala dependências básicas
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y software-properties-common
-sudo add-apt-repository universe
-
-# Instala dependências do PufferPanel
-sudo apt install -y openssl curl nginx mysql-client mysql-server php-fpm php-cli php-curl php-mysql
-
-# Protege a instalação do MySQL (defina a senha root durante o processo)
-sudo mysql_secure_installation
-
-# Adiciona o repositório oficial do PufferPanel
-curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | sudo bash
-
-# Instala o PufferPanel atualizado via APT
-sudo apt install -y pufferpanel
-
-# Inicia e habilita o serviço
-sudo systemctl enable --now pufferpanel
-
-# Cria o usuário administrador para o painel
-sudo pufferpanel user add
-
-# Mostra instrução de acesso
-echo "Instalação concluída. Acesse o painel em: http://localhost:8080"
-
-
-RUN apt-get update && apt-get install -y \
+# Atualiza pacotes e instala dependências básicas
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+    software-properties-common \
+    openssl \
+    curl \
+    nginx \
+    mysql-client \
+    mysql-server \
+    php-fpm \
+    php-cli \
+    php-curl \
+    php-mysql \
     qutebrowser \
     libnss3 \
     libxss1 \
     libasound2t64 \
     libatk-bridge2.0-0 \
-    libgtk-3-0 
-   
+    libgtk-3-0 \
+    gnupg \
+    ca-certificates \
+    lsb-release
 
+# Adiciona o repositório oficial do PufferPanel
+RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
+
+# Instala o PufferPanel
+RUN apt-get install -y pufferpanel
+
+# Habilita o PufferPanel (não funciona com systemctl, então você deve iniciar manualmente via supervisord ou script)
+# Também já cria um usuário admin com dados padrão
+RUN mkdir -p /etc/pufferpanel && \
+    echo '{}' > /etc/pufferpanel/config.json && \
+    pufferpanel user add --email admin@admin.com --password admin --admin
+
+# Expõe a porta do painel
+EXPOSE 8080
+
+# Comando para iniciar o PufferPanel (e Nginx/MySQL, se quiser)
+CMD service mysql start && \
+    service php7.4-fpm start && \
+    service nginx start && \
+    pufferpanel run
+    
 
 RUN apt-get -y -qq update && apt-get -y -qq install \
     dbus-x11 \
