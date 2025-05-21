@@ -41,14 +41,16 @@ RUN mkdir -p /etc/pufferpanel && \
     echo '{}' > /etc/pufferpanel/config.json && \
     pufferpanel user add --email admin@admin.com --password admin --admin
 
+# Copia o script de startup
+COPY startup.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh
+
 # Expõe a porta do painel
 EXPOSE 8080
 
-# Inicia os serviços manualmente
-CMD service mysql start && \
-    service php8.3-fpm start && \
-    service nginx start && \
-    pufferpanel run
+# Comando padrão ao iniciar o container
+CMD ["/usr/local/bin/startup.sh"]
+
     
     
 
