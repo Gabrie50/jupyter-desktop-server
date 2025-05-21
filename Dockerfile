@@ -1,30 +1,34 @@
 FROM quay.io/jupyter/base-notebook:2025-04-01
 
 
+
+
 USER root
 
 # Atualiza pacotes e instala dependências básicas
 RUN apt-get update && apt-get upgrade -y && \
+    echo "exit 101" > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && \
     apt-get install -y \
-    software-properties-common \
-    openssl \
-    curl \
-    nginx \
-    mysql-client \
-    mysql-server \
-    php-fpm \
-    php-cli \
-    php-curl \
-    php-mysql \
-    qutebrowser \
-    libnss3 \
-    libxss1 \
-    libasound2t64 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    gnupg \
-    ca-certificates \
-    lsb-release
+        software-properties-common \
+        openssl \
+        curl \
+        nginx \
+        mysql-client \
+        mysql-server \
+        php-fpm \
+        php-cli \
+        php-curl \
+        php-mysql \
+        qutebrowser \
+        libnss3 \
+        libxss1 \
+        libasound2t64 \
+        libatk-bridge2.0-0 \
+        libgtk-3-0 \
+        gnupg \
+        ca-certificates \
+        lsb-release && \
+    rm /usr/sbin/policy-rc.d
 
 # Adiciona o repositório oficial do PufferPanel
 RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
@@ -32,8 +36,7 @@ RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel
 # Instala o PufferPanel
 RUN apt-get install -y pufferpanel
 
-# Habilita o PufferPanel (não funciona com systemctl, então você deve iniciar manualmente via supervisord ou script)
-# Também já cria um usuário admin com dados padrão
+# Configura o PufferPanel e cria um usuário admin padrão
 RUN mkdir -p /etc/pufferpanel && \
     echo '{}' > /etc/pufferpanel/config.json && \
     pufferpanel user add --email admin@admin.com --password admin --admin
@@ -41,11 +44,12 @@ RUN mkdir -p /etc/pufferpanel && \
 # Expõe a porta do painel
 EXPOSE 8080
 
-# Comando para iniciar o PufferPanel (e Nginx/MySQL, se quiser)
+# Inicia os serviços manualmente
 CMD service mysql start && \
-    service php7.4-fpm start && \
+    service php8.3-fpm start && \
     service nginx start && \
     pufferpanel run
+    
     
 
 RUN apt-get -y -qq update && apt-get -y -qq install \
