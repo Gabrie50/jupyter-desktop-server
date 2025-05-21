@@ -1,9 +1,7 @@
 from setuptools import setup, find_packages
 
-
 with open("README.md") as f:
     readme = f.read()
-
 
 setup(
     name="jupyter-desktop-server",
@@ -23,11 +21,12 @@ setup(
     entry_points={
         'jupyter_serverproxy_servers': [
             'desktop = jupyter_desktop:setup_desktop',
+            'pufferpanel = jupyter_desktop:setup_pufferpanel',
         ]
     },
     install_requires=['jupyter-server-proxy>=1.4.0'],
     include_package_data=True,
-    keywords=["Interactive", "Desktop", "Jupyter"],
+    keywords=["Interactive", "Desktop", "Jupyter", "PufferPanel"],
     license="BSD",
     long_description=readme,
     long_description_content_type="text/markdown",
