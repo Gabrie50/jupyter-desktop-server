@@ -1,4 +1,4 @@
- ##!/bin/sh
+##!/bin/sh
 export DISPLAY=:1
 cd "$HOME"
 
