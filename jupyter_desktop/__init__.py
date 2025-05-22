@@ -56,12 +56,11 @@ def setup_desktop():
         'new_browser_window': True
     }
 
-def setup_pufferpanel():
+    def setup_pufferpanel():
     return {
         'command': ['/usr/bin/pufferpanel', 'serve'],
         'timeout': 300,
-        'port': 5901,
-        'new_browser_window': True,
+        'port': 8080,
         'launcher_entry': {
             'title': 'PufferPanel',
             'icon_path': os.path.join(HERE, 'icons', 'pufferpanel.svg'),
