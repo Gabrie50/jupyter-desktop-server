@@ -1,7 +1,3 @@
-##!/bin/sh
+#!/bin/sh
 export DISPLAY=:1
-cd "$HOME"
-
-nohup pufferpanel run > /var/log/pufferpanel.log 2>&1 &
-
 exec dbus-launch startxfce4
