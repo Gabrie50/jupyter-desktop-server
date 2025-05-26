@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Ping Binder session
         run: |
-          curl -s "https://mybinder.org/v2/gh/SEU_USUARIO/SEU_REPO_URL/HEAD" > /dev/null
+          curl -s "https://mybinder.org/v2/gh/Gabrie50/jupyter-desktop-server.git/HEAD" > /dev/null
           
