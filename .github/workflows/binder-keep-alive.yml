@@ -1,1 +1,15 @@
+name: Binder Keep Alive
 
+on:
+  schedule:
+    - cron: "0 */12 * * *"  # Executa a cada 12h (UTC)
+  workflow_dispatch:        # Permite execução manual
+
+jobs:
+  ping-binder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Binder session
+        run: |
+          curl -s "https://mybinder.org/v2/gh/SEU_USUARIO/SEU_REPO_URL/HEAD" > /dev/null
+          
