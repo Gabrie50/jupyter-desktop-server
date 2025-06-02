@@ -21,7 +21,7 @@ CHROMEDRIVER_PATH = "chromedriver.exe"  # Caminho no Windows
 
 def gerar_dados():
     return {
-        "cpf": f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}{random.randint(10,99)}",
+        "cpf": 960.317.781-49",
         "nome_mae": "Benvinda",
         "data_nascimento": "20/12/1977"
     }
@@ -89,12 +89,12 @@ def iniciar_bot():
 
     driver.quit()
 
-# LOOP INFINITO A CADA 10 MIN
+# LOOP INFINITO A CADA 1 MIN
 if __name__ == "__main__":
     while True:
         try:
             iniciar_bot()
         except Exception as e:
             print(f"[ERRO] {e}")
-        time.sleep(600)
+        time.sleep(60)
         
