@@ -1,15 +1,101 @@
-name: Binder Keep Alive
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+import time
+import random
+import requests
+from twilio.rest import Client
 
-on:
-  schedule:
-    - cron: "0 */12 * * *"  # Executa a cada 12h (UTC)
-  workflow_dispatch:        # Permite execução manual
+# ======================= CONFIGURAÇÕES =======================
+TWILIO_ACCOUNT_SID = 'ACad6d3e46b8bc77cb2baebbe314f2d6c'
+TWILIO_AUTH_TOKEN = '20c319f39b38f7667cfda53fa5d87795'
+TWILIO_FROM = 'whatsapp:+14155238886'  # Número padrão do sandbox do Twilio
+TO_WHATSAPP = 'whatsapp:+5561992006064'  # Seu número com DDD e prefixo 'whatsapp:'
 
-jobs:
-  ping-binder:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ping Binder session
-        run: |
-          curl -s "https://mybinder.org/v2/gh/Gabrie50/jupyter-desktop-server.git/HEAD" > /dev/null
-          
+
+CAPTCHA_API_KEY = 'SUA_CHAVE_2CAPTCHA'
+URL_SITE = 'https://cadastro.pr.gov.br/Agenda/CRAS'  # exemplo, troque se for outro
+
+CHROMEDRIVER_PATH = "chromedriver.exe"  # Caminho no Windows
+# ============================================================
+
+def gerar_dados():
+    return {
+        "cpf": f"{random.randint(100,999)}{random.randint(100,999)}{random.randint(100,999)}{random.randint(10,99)}",
+        "nome_mae": "Benvinda",
+        "data_nascimento": "20/12/1977"
+    }
+
+def resolver_captcha(site_key, url):
+    print("[INFO] Enviando captcha para 2Captcha...")
+    resp = requests.post("http://2captcha.com/in.php", data={
+        'key': CAPTCHA_API_KEY,
+        'method': 'userrecaptcha',
+        'googlekey': site_key,
+        'pageurl': url,
+        'json': 1
+    })
+    request_id = resp.json().get('request')
+    time.sleep(20)
+    while True:
+        r = requests.get(f"http://2captcha.com/res.php?key={CAPTCHA_API_KEY}&action=get&id={request_id}&json=1")
+        if r.json()['status'] == 1:
+            print("[INFO] Captcha resolvido!")
+            return r.json()['request']
+        print("[INFO] Aguardando resolução do captcha...")
+        time.sleep(5)
+
+def enviar_whatsapp(mensagem):
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    client.messages.create(
+        body=mensagem,
+        from_=TWILIO_FROM,
+        to=TO_WHATSAPP
+    )
+    print("[INFO] WhatsApp enviado!")
+
+def iniciar_bot():
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")
+    service = Service(CHROMEDRIVER_PATH)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    driver.get(URL_SITE)
+    time.sleep(5)
+
+    dados = gerar_dados()
+    print("[INFO] Preenchendo dados...")
+
+    driver.find_element(By.ID, "cpf").send_keys(dados["cpf"])
+    driver.find_element(By.ID, "nomeMae").send_keys(dados["nome_mae"])
+    driver.find_element(By.ID, "dataNascimento").send_keys(dados["data_nascimento"])
+
+    # Resolver CAPTCHA
+    site_key = driver.find_element(By.CLASS_NAME, "g-recaptcha").get_attribute("data-sitekey")
+    token = resolver_captcha(site_key, URL_SITE)
+
+    driver.execute_script('document.getElementById("g-recaptcha-response").style.display = "block";')
+    driver.execute_script(f'document.getElementById("g-recaptcha-response").value = "{token}";')
+
+    time.sleep(2)
+    driver.find_element(By.ID, "btnContinuar").click()
+    time.sleep(8)
+
+    if "nenhuma vaga" in driver.page_source.lower():
+        print("[INFO] Nenhuma vaga disponível.")
+    else:
+        print("[ALERTA] VAGA DISPONÍVEL!")
+        enviar_whatsapp("⚠️ *VAGA DISPONÍVEL NO CRAS!* Acesse o site agora para agendar.")
+
+    driver.quit()
+
+# LOOP INFINITO A CADA 10 MIN
+if __name__ == "__main__":
+    while True:
+        try:
+            iniciar_bot()
+        except Exception as e:
+            print(f"[ERRO] {e}")
+        time.sleep(600)
+        
