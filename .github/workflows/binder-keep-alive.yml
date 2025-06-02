@@ -13,8 +13,7 @@ TWILIO_AUTH_TOKEN = '20c319f39b38f7667cfda53fa5d87795'
 TWILIO_FROM = 'whatsapp:+14155238886'  # Número padrão do sandbox do Twilio
 TO_WHATSAPP = 'whatsapp:+5561992006064'  # Seu número com DDD e prefixo 'whatsapp:'
 
-
-CAPTCHA_API_KEY = 'SUA_CHAVE_2CAPTCHA'
+CAPTCHA_API_KEY = 'ea4abd0e9b98d4f703190e67ea2195d1'  # CHAVE 2CAPTCHA inserida aqui
 URL_SITE = 'https://cadastro.pr.gov.br/Agenda/CRAS'  # exemplo, troque se for outro
 
 CHROMEDRIVER_PATH = "chromedriver.exe"  # Caminho no Windows
