@@ -2,8 +2,8 @@ channels:
   - conda-forge
 dependencies:
   - jupyter-server-proxy>=1.4
-  - jupyter-keepalive>=0.1.1
   - pip
   - websockify
+  - jupyter-keepalive>=0.1.1
   - pip:
       - .
