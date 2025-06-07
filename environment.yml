@@ -4,6 +4,7 @@ dependencies:
   - jupyter-server-proxy>=1.4
   - pip
   - websockify
-  - jupyter-keepalive>=0.1.1
   - pip:
       - .
+      - jupyter-keepalive>=0.1.1
+      
