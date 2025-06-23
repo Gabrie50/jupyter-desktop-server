@@ -15,7 +15,6 @@ RUN apt-get update && apt-get upgrade -y && \
         curl \
         nginx \
         neofetch \ 
-        nvidia-smi \
         mysql-client \
         mysql-server \
         php-fpm \
