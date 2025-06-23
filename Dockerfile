@@ -11,8 +11,11 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y \
         software-properties-common \
         openssl \
+        openssh-client \
         curl \
         nginx \
+        neofetch \ 
+        nvidia-smi \
         mysql-client \
         mysql-server \
         php-fpm \
