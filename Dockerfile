@@ -5,6 +5,29 @@ FROM quay.io/jupyter/base-notebook:2025-04-01
 
 USER root
 
+# Instala dependências básicas do sistema
+RUN apt-get update && apt-get install -y \
+    libx11-6 libxi6 libxxf86vm1 libxcursor1 libxrandr2 libxinerama1 \
+    libglew2.2 libopenal1 libpulse0 \
+    libgl1-mesa-glx libegl1-mesa \
+    wget tar bzip2 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Instala Blender 4.4.3
+ENV BLENDER_VERSION=4.4.3
+ENV BLENDER_DIR=blender-${BLENDER_VERSION}-linux-x64
+ENV BLENDER_TAR=${BLENDER_DIR}.tar.xz
+ENV BLENDER_URL=https://download.blender.org/release/Blender4.4/${BLENDER_TAR}
+
+RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
+    tar -xf /tmp/${BLENDER_TAR} -C /opt && \
+    ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
+    rm /tmp/${BLENDER_TAR}
+
+USER $NB_USER
+WORKDIR /home/$NB_USER
+
+
 # Atualiza pacotes e instala dependências básicas
 RUN apt-get update && apt-get upgrade -y && \
     echo "exit 101" > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && \
