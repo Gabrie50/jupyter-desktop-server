@@ -5,13 +5,6 @@ FROM quay.io/jupyter/base-notebook:2025-04-01
 
 USER root
 
-# Instala dependências básicas do sistema
-RUN apt-get update && apt-get install -y \
-    libx11-6 libxi6 libxxf86vm1 libxcursor1 libxrandr2 libxinerama1 \
-    libglew2.2 libopenal1 libpulse0 \
-    libgl1-mesa-glx libegl1-mesa \
-    wget tar bzip2 && \
-    rm -rf /var/lib/apt/lists/*
 
 # Instala Blender 4.4.3
 ENV BLENDER_VERSION=4.4.3
