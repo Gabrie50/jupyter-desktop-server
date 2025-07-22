@@ -2,9 +2,10 @@ FROM quay.io/jupyter/base-notebook:2025-04-01
 
 
 
-
 USER root
 
+# Instalar dependência necessária para extrair .xz
+RUN apt-get update && apt-get install -y xz-utils
 
 # Instala Blender 4.4.3
 ENV BLENDER_VERSION=4.4.3
@@ -16,6 +17,8 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     tar -xf /tmp/${BLENDER_TAR} -C /opt && \
     ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
     rm /tmp/${BLENDER_TAR}
+    
+
 
 
 
