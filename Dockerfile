@@ -17,8 +17,7 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
     rm /tmp/${BLENDER_TAR}
 
-USER $NB_USER
-WORKDIR /home/$NB_USER
+
 
 
 # Atualiza pacotes e instala dependências básicas
