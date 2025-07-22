@@ -8,7 +8,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 def setup_desktop():
     # Detecta a resoluÃ§Ã£o da tela automaticamente ou usa o padrÃ£o
     width = os.getenv("SCREEN_WIDTH", "1100")
-    height = os.getenv("SCREEN_HEIGHT", "520")
+    height = os.getenv("SCREEN_HEIGHT", "720")
     resolution = f"{width}x{height}"
 
     # Cria um diretÃ³rio temporÃ¡rio para os sockets
