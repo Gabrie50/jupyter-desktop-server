@@ -25,7 +25,7 @@ ENV LIBGL_ALWAYS_SOFTWARE=1 \
     WINEDEBUG=-all \
     WINEDLLOVERRIDES=dxgi=n \
     OPENCL_DISABLE=1 \
-    CUDA_VISIBLE_DEVICES=-1 \
+    CUDA_VISIBLE_DEVICES=-1 
 
 # Volta pro usuário Jupyter padrão
 USER $NB_UID
