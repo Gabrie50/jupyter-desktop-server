@@ -19,11 +19,16 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     rm /tmp/${BLENDER_TAR}
     
 
-# Desativa GPU para TensorFlow/PyTorch e OpenCL
-ENV CUDA_VISIBLE_DEVICES="-1"
-ENV OPENCL_DISABLE="1"
-ENV LIBGL_ALWAYS_SOFTWARE="1"
+# Define variáveis para forçar renderização por software (CPU only)
+ENV LIBGL_ALWAYS_SOFTWARE=1 \
+    GALLIUM_DRIVER=llvmpipe \
+    WINEDEBUG=-all \
+    WINEDLLOVERRIDES=dxgi=n \
+    OPENCL_DISABLE=1 \
+    CUDA_VISIBLE_DEVICES=-1
 
+# Volta pro usuário Jupyter padrão
+USER $NB_UID
 
 
 # Atualiza pacotes e instala dependências básicas
