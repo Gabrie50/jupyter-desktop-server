@@ -22,6 +22,8 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
 # Desativa GPU para TensorFlow/PyTorch e OpenCL
 ENV CUDA_VISIBLE_DEVICES="-1"
 ENV OPENCL_DISABLE="1"
+ENV LIBGL_ALWAYS_SOFTWARE="1"
+
 
 
 # Atualiza pacotes e instala dependências básicas
