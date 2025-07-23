@@ -27,8 +27,7 @@ ENV LIBGL_ALWAYS_SOFTWARE=1 \
     OPENCL_DISABLE=1 \
     CUDA_VISIBLE_DEVICES=-1 
 
-# Volta pro usuário Jupyter padrão
-USER $NB_UID
+
 
 
 # Atualiza pacotes e instala dependências básicas
@@ -180,4 +179,9 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
     echo "c.content.canvas_reading = False" >> /home/jovyan/.config/qutebrowser/config.py && \
     echo "c.content.reporting = False" >> /home/jovyan/.config/qutebrowser/config.py
 
+
+
+
+# Volta pro usuário Jupyter padrão
+USER $NB_UID
 
