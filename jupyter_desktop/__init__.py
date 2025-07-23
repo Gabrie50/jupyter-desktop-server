@@ -7,7 +7,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 def setup_desktop():
     # Detecta a resoluÃ§Ã£o da tela automaticamente ou usa o padrÃ£o
-    width = os.getenv("SCREEN_WIDTH", "1380")
+    width = os.getenv("SCREEN_WIDTH", "1580")
     height = os.getenv("SCREEN_HEIGHT", "720")
     resolution = f"{width}x{height}"
 
