@@ -19,8 +19,9 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     rm /tmp/${BLENDER_TAR}
     
 
-
-
+# Desativa GPU para TensorFlow/PyTorch e OpenCL
+ENV CUDA_VISIBLE_DEVICES="-1"
+ENV OPENCL_DISABLE="1"
 
 
 # Atualiza pacotes e instala dependências básicas
@@ -50,26 +51,7 @@ RUN apt-get update && apt-get upgrade -y && \
         lsb-release && \
     rm /usr/sbin/policy-rc.d
 
-# Adiciona o repositório oficial do PufferPanel
-RUN curl -s https://packagecloud.io/install/repositories/pufferpanel/pufferpanel/script.deb.sh | bash
 
-# Instala o PufferPanel
-RUN apt-get install -y pufferpanel
-
-# Configura o PufferPanel e cria um usuário admin padrão
-RUN mkdir -p /etc/pufferpanel && \
-    echo '{}' > /etc/pufferpanel/config.json && \
-    pufferpanel user add --email admin@admin.com --password admin --admin
-
-# Copia o script de startup do caminho correto
-COPY jupyter_desktop/share/xstartup /usr/local/bin/startup
-RUN chmod +x /usr/local/bin/startup
-
-# Expõe a porta do painel
-EXPOSE 8080
-
-# Comando padrão ao iniciar o container
-CMD ["/usr/local/bin/startup"]
 
     
 
