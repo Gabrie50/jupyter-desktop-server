@@ -8,7 +8,7 @@ USER root
 RUN apt-get update && apt-get install -y xz-utils
 
 # Instala Blender 4.4.5
-ENV BLENDER_VERSION=4.4.5
+ENV BLENDER_VERSION=4.4.4
 ENV BLENDER_DIR=blender-${BLENDER_VERSION}-linux-x64
 ENV BLENDER_TAR=${BLENDER_DIR}.tar.xz
 ENV BLENDER_URL=https://download.blender.org/release/Blender4.4/${BLENDER_TAR}
