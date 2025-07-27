@@ -7,11 +7,12 @@ USER root
 # Instalar dependência necessária para extrair .xz
 RUN apt-get update && apt-get install -y xz-utils
 
-# Instala Blender 4.4.5
-ENV BLENDER_VERSION=4.4.4
+# Instala Blender 4.4.3
+ENV BLENDER_VERSION=4.4.3
 ENV BLENDER_DIR=blender-${BLENDER_VERSION}-linux-x64
 ENV BLENDER_TAR=${BLENDER_DIR}.tar.xz
-ENV BLENDER_URL=https://download.blender.org/release/Blender4.4/${BLENDER_TAR}
+ENV BLENDER_URL=https://download.blender.org/release/Blender4.4/blender-4.4.3-linux-x64.tar.xz
+
 
 RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     tar -xf /tmp/${BLENDER_TAR} -C /opt && \
