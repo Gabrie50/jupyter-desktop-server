@@ -36,6 +36,7 @@ RUN apt-get update && apt-get upgrade -y && \
     echo "exit 101" > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && \
     apt-get install -y \
         software-properties-common \
+        uv /
         openssl \
         openssh-client \
         curl \
