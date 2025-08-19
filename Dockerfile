@@ -63,15 +63,15 @@ ENV LIBGL_ALWAYS_SOFTWARE=1 \
 
 
 # Atualiza pacotes e instala dependências básicas
-RUN apt-get update && apt-get upgrade -y && \
-    echo "exit 101" > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && \
-    apt-get install -y \
+    
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
         software-properties-common \
         openssl \
         openssh-client \
         curl \
         nginx \
-        neofetch \ 
+        neofetch \
         mysql-client \
         mysql-server \
         php-fpm \
@@ -81,13 +81,13 @@ RUN apt-get update && apt-get upgrade -y && \
         qutebrowser \
         libnss3 \
         libxss1 \
-        libasound2t64 \
+        libasound2 \
         libatk-bridge2.0-0 \
         libgtk-3-0 \
         gnupg \
         ca-certificates \
         lsb-release && \
-    rm /usr/sbin/policy-rc.d
+    rm -rf /var/lib/apt/lists/*
 
 
 
