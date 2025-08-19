@@ -18,7 +18,11 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     tar -xf /tmp/${BLENDER_TAR} -C /opt && \
     ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
     rm /tmp/${BLENDER_TAR}
-    
+
+# Instalar NautilusTrader direto do GitHub (branch main)
+RUN pip install --no-cache-dir git+https://github.com/nautechsystems/nautilus_trader.git@main
+
+
 
 # Define variáveis para forçar renderização por software (CPU only)
 ENV LIBGL_ALWAYS_SOFTWARE=1 \
