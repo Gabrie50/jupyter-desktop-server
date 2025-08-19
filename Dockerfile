@@ -62,6 +62,8 @@ ENV LIBGL_ALWAYS_SOFTWARE=1 \
 
 # Atualiza pacotes e instala dependências básicas
     
+
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         software-properties-common \
@@ -79,14 +81,13 @@ RUN apt-get update && \
         qutebrowser \
         libnss3 \
         libxss1 \
-        libasound2 \
+        libasound2t64 \
         libatk-bridge2.0-0 \
         libgtk-3-0 \
         gnupg \
         ca-certificates \
         lsb-release && \
     rm -rf /var/lib/apt/lists/*
-
 
 
     
