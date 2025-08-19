@@ -43,9 +43,7 @@ RUN pip install --no-cache-dir nautilus-trader[all]
 # Se quiser a versão mais recente do GitHub, use:
 # RUN pip install --no-cache-dir git+https://github.com/nautechsystems/nautilus_trader.git@main
 
-# Ajusta permissões para o usuário jovyan
-USER $NB_USER
-ENV PATH=/home/$NB_USER/.local/bin:$PATH
+
 
 # Teste rápido (opcional, mostra ajuda do CLI)
 RUN nautilus --help || echo "NautilusTrader CLI pronto!"
@@ -214,6 +212,8 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
-# Volta pro usuário Jupyter padrão
-USER $NB_UID
+# Ajusta permissões para o usuário jovyan
+USER $NB_USER
+ENV PATH=/home/$NB_USER/.local/bin:$PATH
+
 
