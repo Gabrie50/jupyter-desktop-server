@@ -19,9 +19,36 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
     rm /tmp/${BLENDER_TAR}
 
-# Instalar NautilusTrader direto do GitHub (branch main)
-RUN pip install --no-cache-dir git+https://github.com/nautechsystems/nautilus_trader.git@main
+# ==========================
+# Instalação do NautilusTrader
+# ==========================
 
+# Volta para root para instalar dependências de compilação
+USER root
+
+# Instala ferramentas de compilação e bibliotecas necessárias
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        python3-dev \
+        git \
+        cmake \
+        libssl-dev \
+        libffi-dev \
+    && pip install --upgrade pip setuptools wheel \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instala NautilusTrader (versão PyPI estável)
+RUN pip install --no-cache-dir nautilus-trader[all]
+
+# Se quiser a versão mais recente do GitHub, use:
+# RUN pip install --no-cache-dir git+https://github.com/nautechsystems/nautilus_trader.git@main
+
+# Ajusta permissões para o usuário jovyan
+USER $NB_USER
+ENV PATH=/home/$NB_USER/.local/bin:$PATH
+
+# Teste rápido (opcional, mostra ajuda do CLI)
+RUN nautilus --help || echo "NautilusTrader CLI pronto!"
 
 
 # Define variáveis para forçar renderização por software (CPU only)
