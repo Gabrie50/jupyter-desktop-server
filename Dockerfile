@@ -185,12 +185,14 @@ RUN chown -R $NB_UID:$NB_GID $HOME
 ADD . /opt/install
 RUN fix-permissions /opt/install
 
-USER $NB_USER
-WORKDIR /home/$NB_USER
+# Volta para root para atualizar o Conda
+USER root
+WORKDIR /opt/install
 
 # Atualizar Conda se environment.yml existir
-RUN cd /opt/install && \
-    if [ -f environment.yml ]; then conda env update -n base --file environment.yml; fi
+RUN if [ -f environment.yml ]; then \
+        conda env update -n base --file environment.yml; \
+    fi
 
 
 
@@ -213,8 +215,7 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
-# Ajusta permissões para o usuário jovyan
+# Volta para o usuário jovyan
 USER $NB_USER
-ENV PATH=/home/$NB_USER/.local/bin:$PATH
-
+WORKDIR /home/$NB_USER
 
