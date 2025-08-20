@@ -18,36 +18,7 @@ RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
     tar -xf /tmp/${BLENDER_TAR} -C /opt && \
     ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
     rm /tmp/${BLENDER_TAR}
-
-# ==========================
-# Instalação do NautilusTrader
-# ==========================
-
-# Volta para root para instalar dependências de compilação
-USER root
-
-# Instala ferramentas de compilação e bibliotecas necessárias
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        python3-dev \
-        git \
-        cmake \
-        libssl-dev \
-        libffi-dev \
-    && pip install --upgrade pip setuptools wheel \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Instala NautilusTrader (versão PyPI estável)
-RUN pip install --no-cache-dir nautilus-trader[all]
-
-# Se quiser a versão mais recente do GitHub, use:
-# RUN pip install --no-cache-dir git+https://github.com/nautechsystems/nautilus_trader.git@main
-
-
-
-# Teste rápido (opcional, mostra ajuda do CLI)
-RUN nautilus --help || echo "NautilusTrader CLI pronto!"
-
+    
 
 # Define variáveis para forçar renderização por software (CPU only)
 ENV LIBGL_ALWAYS_SOFTWARE=1 \
@@ -61,17 +32,15 @@ ENV LIBGL_ALWAYS_SOFTWARE=1 \
 
 
 # Atualiza pacotes e instala dependências básicas
-    
-
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && \
+    echo "exit 101" > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && \
+    apt-get install -y \
         software-properties-common \
         openssl \
         openssh-client \
         curl \
         nginx \
-        neofetch \
+        neofetch \ 
         mysql-client \
         mysql-server \
         php-fpm \
@@ -87,7 +56,8 @@ RUN apt-get update && \
         gnupg \
         ca-certificates \
         lsb-release && \
-    rm -rf /var/lib/apt/lists/*
+    rm /usr/sbin/policy-rc.d
+
 
 
     
@@ -185,14 +155,12 @@ RUN chown -R $NB_UID:$NB_GID $HOME
 ADD . /opt/install
 RUN fix-permissions /opt/install
 
-# Volta para root para atualizar o Conda
-USER root
-WORKDIR /opt/install
+USER $NB_USER
+WORKDIR /home/$NB_USER
 
 # Atualizar Conda se environment.yml existir
-RUN if [ -f environment.yml ]; then \
-        conda env update -n base --file environment.yml; \
-    fi
+RUN cd /opt/install && \
+    if [ -f environment.yml ]; then conda env update -n base --file environment.yml; fi
 
 
 
@@ -215,7 +183,5 @@ RUN mkdir -p /home/jovyan/.config/qutebrowser && \
 
 
 
-# Volta para o usuário jovyan
-USER $NB_USER
-WORKDIR /home/$NB_USER
-
+# Volta pro usuário Jupyter padrão
+USER $NB_UID
