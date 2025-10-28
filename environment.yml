@@ -6,6 +6,6 @@ dependencies:
   - websockify
   - paramiko                # adiciona o 
   - pip:
-      - .
+      - MetaTrader5
       - jupyter-keepalive>=0.1.1
       
