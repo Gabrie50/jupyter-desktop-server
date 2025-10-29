@@ -106,11 +106,12 @@ RUN apt-get -y -qq update && apt-get -y -qq install \
 
     
 # Instalar TurboVNC
-ARG TURBOVNC_VERSION=2.2.6
 RUN wget -q "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
-    apt-get install -y ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
-    rm turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+    rm -rf /var/lib/apt/lists/* turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
     ln -s /opt/TurboVNC/bin/* /usr/local/bin/
+
 
 # Adiciona a arquitetura i386 necessária para o Wine
 RUN dpkg --add-architecture i386
