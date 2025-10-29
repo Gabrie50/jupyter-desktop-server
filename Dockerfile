@@ -7,17 +7,7 @@ USER root
 # Instalar dependência necessária para extrair .xz
 RUN apt-get update && apt-get install -y xz-utils
 
-# Instala Blender 4.4.3
-ENV BLENDER_VERSION=4.4.3
-ENV BLENDER_DIR=blender-${BLENDER_VERSION}-linux-x64
-ENV BLENDER_TAR=${BLENDER_DIR}.tar.xz
-ENV BLENDER_URL=https://download.blender.org/release/Blender4.4/blender-4.4.3-linux-x64.tar.xz
 
-
-RUN wget -q ${BLENDER_URL} -O /tmp/${BLENDER_TAR} && \
-    tar -xf /tmp/${BLENDER_TAR} -C /opt && \
-    ln -s /opt/${BLENDER_DIR}/blender /usr/local/bin/blender && \
-    rm /tmp/${BLENDER_TAR}
     
 
 # Define variáveis para forçar renderização por software (CPU only)
@@ -105,9 +95,7 @@ RUN apt-get -y -qq update && apt-get -y -qq install \
 
 
     
-# Instalar TurboVNC
-ARG TURBOVNC_VERSION=2.2.6
-RUN wget -q "https://downloads.sourceforge.net/project/turbovnc/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb" -O turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
+RUN wget -q -L "https://sourceforge.net/projects/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb/download" -O turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
     apt-get update && \
     apt-get install -y --no-install-recommends ./turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
     rm -rf /var/lib/apt/lists/* turbovnc_${TURBOVNC_VERSION}_amd64.deb && \
