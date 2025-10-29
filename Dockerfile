@@ -152,12 +152,13 @@ WORKDIR /home/$NB_USER
 
 # Atualizar Conda se environment.yml existir
 RUN if [ -f /opt/install/environment.yml ]; then \
-        echo "=== Conteúdo do environment.yml ===" && \
-        cat /opt/install/environment.yml && \
-        echo "=== Iniciando atualização do conda ===" && \
-        conda env update -n base --file /opt/install/environment.yml --prune; \
-    else \
-        echo "Arquivo environment.yml não encontrado"; \
+        echo "=== Instalando dependências conda ===" && \
+        conda install --yes --file /opt/install/environment.yml || true; \
+    fi
+
+# Instalar dependências pip separadamente (se houver)
+RUN if [ -f /opt/install/requirements.txt ]; then \
+        pip install --no-cache-dir -r /opt/install/requirements.txt || true; \
     fi
 
 
