@@ -151,10 +151,14 @@ USER $NB_USER
 WORKDIR /home/$NB_USER
 
 # Atualizar Conda se environment.yml existir
-RUN cd /opt/install && \
-    if [ -f environment.yml ]; then conda env update -n base --file environment.yml; fi
-
-
+RUN if [ -f /opt/install/environment.yml ]; then \
+        echo "=== Conteúdo do environment.yml ===" && \
+        cat /opt/install/environment.yml && \
+        echo "=== Iniciando atualização do conda ===" && \
+        conda env update -n base --file /opt/install/environment.yml --prune; \
+    else \
+        echo "Arquivo environment.yml não encontrado"; \
+    fi
 
 
 
